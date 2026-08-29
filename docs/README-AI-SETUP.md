@@ -21,9 +21,16 @@
 | .github/skills/prompt-injection/ | 両方 | 注入疑い時の対応手順(作話検証・メモリ衛生) |
 
 ## Claude Code でスキルを共有する(必須)
-スキル本体は .github/skills/ に一元化。Claude Code からはリンクで共有:
-- macOS/Linux: `ln -s ../.github/skills .claude/skills`
-- Windows(管理者不要): `mklink /J .claude\skills .github\skills`
+スキル本体は .github/skills/ に一元化し、Claude Code へは**スキル単位でリンクを張る**
+(ディレクトリごと張らない。`_domain-template` のように `name:` が未記入のテンプレートまで
+スキルとして登録され、起動が不安定になるため):
+- macOS/Linux: `ln -s ../../.github/skills/<スキル名> .claude/skills/<スキル名>`
+- Windows(管理者不要): `mklink /J .claude\skills\<スキル名> .github\skills\<スキル名>`
+
+リンクを張るのは**description のトリガ語で自動起動させたいスキル**だけでよい
+(現在: `xlflow` / `reverse-vba` / `dig`)。それ以外(`vba-coding` / `code-review` /
+`agent-workflow` 等)は AGENTS.md の「詳細規約」節がパスで参照しており、
+該当タスク時にパス指定で読み込まれるためリンク不要。
 リンク不可の環境ではディレクトリをコピーして同期する。
 
 ## 運用フロー

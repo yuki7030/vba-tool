@@ -45,8 +45,9 @@ BUDGETS = [  # (ファイル名サフィックス, 最大行数)
     (".prompt.md", 15),
 ]
 # セットアップ時に生成される等の理由で存在しなくてよい参照。配下(サブパス)も
-# 許可する(例: .claude/skills/xlflow はsetup.ps1が張るシンボリックリンク)。
-REF_ALLOW = {".claude/skills"}
+# 許可する(例: .claude/skills/xlflow はsetup.ps1が張るシンボリックリンク、
+# docs/as-is/* は reverse-vba スキルが対象リポジトリで生成する成果物)。
+REF_ALLOW = {".claude/skills", "docs/as-is"}
 # Claude Code 専用のオーケストレーション用エージェント(組み込みExplore上書き・
 # サブエージェント委譲機構)。Copilot は同等の自動委譲を持たないため、
 # .github/agents 側のペアを意図的に持たない。ペア整合チェックから除外する。

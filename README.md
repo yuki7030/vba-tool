@@ -20,7 +20,8 @@ AI エージェント(Claude Code / GitHub Copilot)前提の開発フローを�
 | パス | 役割 |
 |---|---|
 | [src/](src/) | VBA ソース(`modules/` = 標準モジュール、`classes/` = クラス、`workbook/` = ブック/シートモジュール)。xlflow の編集対象 |
-| [src/modules/<機能>/](src/modules/) | 機能ごとにフォルダ分割(`@Folder` 注釈と対応)。本体とテスト(`*Tests.bas`)を同梱 |
+| [src/modules/<機能>/](src/modules/) | 機能ごとにフォルダ分割(`@Folder` 注釈と対応) |
+| [src/modules/Tests/](src/modules/) | テストモジュール(`*Tests.bas`)の置き場。テストは機能フォルダに同梱しない |
 | `build/vba-tool.xlsm` | ビルド対象ブック(`.gitignore` 済み。xlflow が push/save する実体) |
 | [docs/](docs/) | プロジェクト知識(用語・スキーマ・業務ルール・仕様・監査記録) |
 | [.github/skills/](.github/skills/) | 作業手順・規約の本体(SKILL.md。遅延ロード) |
@@ -47,11 +48,12 @@ xlflow save --json ; xlflow session stop
 
 - 詳細な手順・安全規則は [.github/skills/xlflow/SKILL.md](.github/skills/xlflow/SKILL.md)。
 - `Debug.Print` 禁止 → `XlflowDebug.Log`。`MsgBox`/`InputBox` 直接使用禁止 → `XlflowUI` ラッパー。
-- テストは各機能フォルダに `Test` 接頭辞の Sub で書き、`XlflowAssert` でアサーションする。
+- テストは `src/modules/Tests/` に `Test` 接頭辞の Sub で書き、`XlflowAssert` でアサーションする。
 
 ## ドキュメント
 
 - 共通開発指示(唯一のソース): [AGENTS.md](AGENTS.md)(Claude Code は [CLAUDE.md](CLAUDE.md) 経由で参照)
-- xlflow 導入ガイド: [docs/README-XLFLOW.md](docs/README-XLFLOW.md)
+- xlflow 導入ガイド(セットアップ・`xlflow.toml` 設定リファレンス): [docs/README-XLFLOW.md](docs/README-XLFLOW.md)
+- xlflow 概要・全コマンド一覧・中核機能の詳説: [docs/xlflow-overview.md](docs/xlflow-overview.md)
 - AI 設定ファイル導入手順: [docs/README-AI-SETUP.md](docs/README-AI-SETUP.md)
 - プロジェクト知識: [用語集](docs/glossary.md) / [スキーマ](docs/schema.md) / [業務ルール](docs/business-rules.md)

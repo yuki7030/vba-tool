@@ -29,6 +29,7 @@
 ## 詳細規約(タスク該当時に参照)
 - 自律実装(要求→実装→静的解析)とモデル選択: .github/skills/autonomous-dev/
 - 仕様書作成: .github/skills/spec-writing/
+- 既存VBA資産のリバース(as-is起こし): .github/skills/reverse-vba/
 - VBA実装: .github/skills/vba-coding/
 - C#実装: .github/skills/csharp-coding/
 - レビュー: .github/skills/code-review/

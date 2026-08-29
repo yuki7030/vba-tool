@@ -38,9 +38,22 @@ description: このリポジトリの Excel VBA 開発(xlflow)の手順・安全
 - ワークシート数式に依存する変更の前には `xlflow formulas pull --json` で
   数式スナップショットを確認する
 
+## 詳細リファレンス(必要になった時だけ読む)
+
+xlflow 同梱(`xlflow skill install`)のため**英語**。翻訳せず原文のまま維持する
+(本体更新のたびに差し替わるので、和訳すると更新のたびに失われるため)。
+
+- テストの書き方・フック・タグ・失敗時の読み解き → [references/testing.md](references/testing.md)
+- 実行時/コンパイル失敗の切り分け(行番号 + `Erl`)→ [references/debugging.md](references/debugging.md)
+- ダイアログの無人応答(`--msgbox` 等) → [references/xlflow-ui.md](references/xlflow-ui.md)
+- UserForm の spec スキーマと往復変換の限界 → [references/forms.md](references/forms.md)
+- 数式スナップショットの構造と読み方 → [references/formulas.md](references/formulas.md)
+
 ## 関連
 
 - VBA コーディング規約(命名・Doxygen・エラー処理) →
   [.github/skills/vba-coding/SKILL.md](../vba-coding/SKILL.md)
 - 導入・セットアップ手順(setup.ps1・リンク構造・トラストセンター) →
   [docs/README-XLFLOW.md](../../../docs/README-XLFLOW.md)
+- xlflow 全体像・全コマンド一覧(日本語の読み物) →
+  [docs/xlflow-overview.md](../../../docs/xlflow-overview.md)

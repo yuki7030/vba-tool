@@ -16,3 +16,6 @@ description: <領域名>(<現場での呼び名・略語も列挙>)に関する�
 ## 使い方
 - このフォルダを .github/skills/domain-<領域名>/ にコピーし、<>を埋めて使用。
 - description には現場の呼び名・略語を全て入れる(スキル起動のトリガーになるため)。
+- 本テンプレートは**業務領域の知識**(docs/domain/)用。既存VBA資産の現状挙動
+  (docs/as-is/)への導線は .github/skills/reverse-vba/templates/domain-skill.md を使う。
+  同じ対象に両方を置くと description のトリガ語が衝突する。
