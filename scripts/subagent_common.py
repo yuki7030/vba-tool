@@ -208,7 +208,7 @@ def reap(agent_id: str, agent_type: str) -> None:
 #  1. 登録済み AUMID(Windows PowerShell)を優先する。未登録 AUMID
 #     ("Claude Code" 等)は CreateToastNotifier/Show が例外を出さずに
 #     表示だけされない(サイレント失敗)。先頭に置くと後続に到達せず
-#     何も表示されない — 2026-07-11 実測で検出・修正
+#     何も表示されない
 #  2. 万一 PowerShell AUMID が無い環境向けに "Claude Code" を後段に残す
 #  3. Show() はトーストを非同期にキューするだけ。detached プロセスが
 #     直後に終了すると配信前に消えるため、末尾で待機して配信猶予を与える
@@ -216,13 +216,16 @@ WIN_TOAST_PS = r"""
 $ErrorActionPreference = 'Stop'
 # WinRT 型リテラルは1行で書く(カンマ後に改行すると PowerShell が
 # 「型名にアセンブリ名が指定されていません」で構文エラーになり、
-# トーストが一切表示されない — 2026-07-11 実測で検出・修正)
+# トーストが一切表示されない
 $null = [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType=WindowsRuntime]
 $null = [Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom.XmlDocument, ContentType=WindowsRuntime]
-# アイコン: CC_TOAST_ICON が実在ファイルなら appLogoOverride で表示
+# アイコン: CC_TOAST_ICON が実在ファイルなら appLogoOverride で表示。
+# hint-crop="circle" は付けない: 同梱アイコンは 48x48 の枠いっぱいに
+# 絵柄(ハサミ・脚が左右端に接する)を描いておりセーフエリアが無いため、
+# 円形クロップだと四隅と手足の外側が見切れる
 $img = ''
 if ($env:CC_TOAST_ICON -and (Test-Path -LiteralPath $env:CC_TOAST_ICON)) {
-  $img = '<image placement="appLogoOverride" hint-crop="circle" src="file:///' + ($env:CC_TOAST_ICON -replace '\\','/') + '"/>'
+  $img = '<image placement="appLogoOverride" src="file:///' + ($env:CC_TOAST_ICON -replace '\\','/') + '"/>'
 }
 $xml = New-Object Windows.Data.Xml.Dom.XmlDocument
 $xml.LoadXml(@"
