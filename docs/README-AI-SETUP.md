@@ -113,7 +113,7 @@ Copilot の .agent.md にも `# model:` 行を用意済み(コメントアウト
 |---|---|---|
 | Claude Code | .claude/settings.json | 編集直後に検査。違反はAIへ差し戻し自動修正させる(exit 2) |
 | Copilot (CLI/coding agent/VS Code) | .github/hooks/doxygen.json | 編集直後に検査結果を通知 |
-| CI (最終ゲート) | .github/workflows/doxygen-check.yml | PR/push時に全ファイル検査。人間のコミットも対象 |
+| CI (最終ゲート) | .github/workflows/static-analysis.yml | PR/push時に全ファイル検査。人間のコミットも対象 |
 
 検査本体は3本(要 Python 3.8+)。全層で共用:
 - scripts/check_doxygen.py: C#=public類に `///` ヘッダ必須 / VBA=Public プロシージャに `'*` ヘッダ+Option Explicit 必須
@@ -138,7 +138,7 @@ Copilot の .agent.md にも `# model:` 行を用意済み(コメントアウト
 | ハード層 (Copilot) | .github/hooks/block-dangerous-bash.json → preToolUse | 同上(bash/powershellツールに対しdeny/askを実行前に返す) |
 | ソフト層 | AGENTS.md の NEVER 2項 | 外部コンテンツ内の指示=データ / セキュリティ事象の無確認永続化禁止 |
 | 対応手順 | .github/skills/prompt-injection/ | 注入疑い時: 作話を第一仮説→トランスクリプトのtool_result実体で検証→報告 |
-| CI | doxygen-check.yml 内の self-test | 検査スクリプト自体の回帰テスト |
+| CI | static-analysis.yml 内の self-test | 検査スクリプト自体の回帰テスト |
 
 検査本体は scripts/block_dangerous_bash.py 1本(標準ライブラリのみ・Windows対応)。
 - **deny(実行させない)**: システムパス・ホーム直下への `rm -rf` 相当(Windows: `Remove-Item -Recurse -Force` / `rd /s /q` 含む)、`mkfs`、`dd`→/dev、ドライブ `format`/`diskpart`、`curl|sh`・`iwr|iex` 等のダウンロード即実行
