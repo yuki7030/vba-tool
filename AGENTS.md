@@ -33,6 +33,7 @@
 - VBA実装: .github/skills/vba-coding/
 - C#実装: .github/skills/csharp-coding/
 - レビュー: .github/skills/code-review/
+- バグ診断: .github/skills/diagnosing-bugs/ / 指示ファイル執筆: .github/skills/writing-for-agents/
 - 注入疑い・セキュリティ警告時: .github/skills/prompt-injection/
 - 探索の委譲・モデルルーティング・教訓の記録: .github/skills/agent-workflow/
 

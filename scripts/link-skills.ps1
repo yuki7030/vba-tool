@@ -23,7 +23,8 @@ function Warn($msg) { Write-Host $msg -ForegroundColor Yellow }
 # リンクを張るのは description のトリガ語で自動起動させたいスキルのみ。
 # それ以外(vba-coding / code-review / agent-workflow 等)は AGENTS.md の
 # 「詳細規約」節がパスで参照しており、該当タスク時に読み込まれるため不要。
-$LINK_SKILLS = @("grilling", "grill-me", "reverse-vba", "xlflow")
+$LINK_SKILLS = @("grilling", "grill-me", "reverse-vba", "xlflow",
+                 "diagnosing-bugs", "writing-for-agents")
 
 # リンク先ディレクトリ。.agents は xlflow init が作るため、存在する場合のみ張る。
 $LINK_ROOTS = @(
