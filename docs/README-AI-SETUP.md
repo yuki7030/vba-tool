@@ -16,21 +16,35 @@
 | .claude/agents/*.md | Claude Code | 専任サブエージェント |
 | .claude/commands/*.md | Claude Code | /spec /review /audit-instructions コマンド |
 | docs/spec/_template.md | 両方 | 仕様書テンプレート |
+| scripts/link-skills.ps1 | 両方 | .github/skills/ の実体をツール別ディレクトリへリンク(下記・必須) |
 | scripts/audit_instructions.py ほか | 両方 | 指示ファイルの機械監査(月次自動・下記) |
 | scripts/block_dangerous_bash.py | 両方 | 危険コマンドの実行前ブロック(注入・作話対策・下記) |
 | .github/skills/prompt-injection/ | 両方 | 注入疑い時の対応手順(作話検証・メモリ衛生) |
 
 ## Claude Code でスキルを共有する(必須)
-スキル本体は .github/skills/ に一元化し、Claude Code へは**スキル単位でリンクを張る**
-(ディレクトリごと張らない。`_domain-template` のように `name:` が未記入のテンプレートまで
-スキルとして登録され、起動が不安定になるため):
+clone 直後に一度実行する(冪等。既にリンク済みならスキップ):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\link-skills.ps1
+```
+
+`.claude/skills/` と(存在すれば)`.agents/skills/` に、`.github/skills/` の実体への
+リンクを張る。Windows では管理者権限も開発者モードも不要な Junction を使う。
+`.claude/skills/` は環境ごとのリンクのため .gitignore 済み(追跡すると本体が二重に
+コミットされる)。**リンクを張らないとスキルは自動起動しない。**
+
+対象スキルは link-skills.ps1 の `$LINK_SKILLS`(現在: `dig` / `reverse-vba` / `xlflow`)。
+リンクを張るのは**description のトリガ語で自動起動させたいスキル**だけでよい。
+それ以外(`vba-coding` / `code-review` / `agent-workflow` 等)は AGENTS.md の
+「詳細規約」節がパスで参照しており、該当タスク時に読み込まれるためリンク不要。
+スキルを追加して自動起動させたい場合は `$LINK_SKILLS` に足して再実行する。
+
+**スキル単位で張る**(ディレクトリごと張らない)のは、`_domain-template` のように
+`name:` 未記入のテンプレートまでスキルとして登録され、起動が不安定になるため。
+手動で張る場合:
 - macOS/Linux: `ln -s ../../.github/skills/<スキル名> .claude/skills/<スキル名>`
 - Windows(管理者不要): `mklink /J .claude\skills\<スキル名> .github\skills\<スキル名>`
 
-リンクを張るのは**description のトリガ語で自動起動させたいスキル**だけでよい
-(現在: `xlflow` / `reverse-vba` / `dig`)。それ以外(`vba-coding` / `code-review` /
-`agent-workflow` 等)は AGENTS.md の「詳細規約」節がパスで参照しており、
-該当タスク時にパス指定で読み込まれるためリンク不要。
 リンク不可の環境ではディレクトリをコピーして同期する。
 
 ## 運用フロー

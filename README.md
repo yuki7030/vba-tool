@@ -26,7 +26,7 @@ AI エージェント(Claude Code / GitHub Copilot)前提の開発フローを�
 | [docs/](docs/) | プロジェクト知識(用語・スキーマ・業務ルール・仕様・監査記録) |
 | [.github/skills/](.github/skills/) | 作業手順・規約の本体(SKILL.md。遅延ロード) |
 | [.claude/](.claude/) | Claude Code のサブエージェント・コマンド・設定 |
-| [scripts/](scripts/) | 静的解析(Doxygen ヘッダ検査 / VBA lint)・指示ファイル監査 |
+| [scripts/](scripts/) | 静的解析(Doxygen ヘッダ検査 / VBA lint)・指示ファイル監査・スキルリンク作成 |
 | [xlflow.toml](xlflow.toml) | xlflow のプロジェクト設定 |
 
 ## セットアップ
@@ -35,6 +35,8 @@ AI エージェント(Claude Code / GitHub Copilot)前提の開発フローを�
    [docs/README-XLFLOW.md](docs/README-XLFLOW.md) を参照(完全自動スクリプト [scripts/xlflow-setup.ps1](scripts/xlflow-setup.ps1) あり)。
 2. AI 設定ファイル(AGENTS.md / スキル / エージェント等)の導入は
    [docs/README-AI-SETUP.md](docs/README-AI-SETUP.md) を参照。
+   clone 直後は `powershell -ExecutionPolicy Bypass -File scripts\link-skills.ps1` を
+   一度実行する(`.claude/skills/` はリンクのため未追跡。張らないとスキルが自動起動しない)。
 
 ## 開発フロー(VBA / xlflow)
 

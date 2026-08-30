@@ -1,2 +1,6 @@
 __pycache__/
 *.pyc
+
+# スキル実体は .github/skills/ に一元化。.claude/skills/ は環境ごとに張る
+# ジャンクション/シンボリックリンクのため追跡しない(追跡すると本体が二重にコミットされる)
+.claude/skills/

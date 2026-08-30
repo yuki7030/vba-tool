@@ -22,26 +22,6 @@ function Update-SessionPath {
     $env:Path = "$machine;$user"
 }
 
-function Set-SkillLink($LinkPath, $RelativeTarget) {
-    if (Test-Path $LinkPath) {
-        $item = Get-Item $LinkPath -Force
-        if ($item.LinkType) {
-            Info "$LinkPath は既にリンク済みのためスキップします"
-            return
-        }
-        Warn "$LinkPath は実体ディレクトリのため削除してリンクに置き換えます"
-        Remove-Item $LinkPath -Recurse -Force
-    } else {
-        New-Item -ItemType Directory -Force -Path (Split-Path $LinkPath -Parent) | Out-Null
-    }
-    try {
-        New-Item -ItemType SymbolicLink -Path $LinkPath -Value $RelativeTarget -ErrorAction Stop | Out-Null
-        Info "$LinkPath → $RelativeTarget のリンクを作成しました"
-    } catch {
-        Warn "シンボリックリンク作成に失敗($LinkPath)。開発者モードを有効化するか管理者権限で再実行してください: $_"
-    }
-}
-
 # --- 0. プロジェクト種別の確認(対話) ---
 Step "プロジェクト種別の確認"
 if (-not $Workbook) {
@@ -102,12 +82,11 @@ if ($Workbook) {
 
 # --- 5. Claude Code / GitHub Copilot 共存設定 ---
 # 現行運用: スキル実体は .github/skills/xlflow に一元化し、
-# .claude/skills/xlflow と .agents/skills/xlflow はそこへのシンボリックリンクにする
+# .claude/skills/xlflow と .agents/skills/xlflow はそこへのリンクにする
 # (重複を持たずClaude Code / Copilot 双方からliveスキルとして参照できるようにするため)
 Step "Claude Code / Copilot スキル共有設定"
 $githubSkillDir = ".github/skills/xlflow"
 $agentsSkillDir = ".agents/skills/xlflow"
-$claudeSkillDir = ".claude/skills/xlflow"
 
 if (-not (Test-Path $githubSkillDir)) {
     if (Test-Path $agentsSkillDir) {
@@ -119,8 +98,8 @@ if (-not (Test-Path $githubSkillDir)) {
     }
 }
 if (Test-Path $githubSkillDir) {
-    Set-SkillLink $agentsSkillDir "../../.github/skills/xlflow"
-    Set-SkillLink $claudeSkillDir "../../.github/skills/xlflow"
+    # リンク作成ロジックは link-skills.ps1 に一元化(全スキル共通の張り直しにも使う)
+    & "$PSScriptRoot/link-skills.ps1" -Skills xlflow
 }
 
 # --- 6. 次の手順 ---
