@@ -1,6 +1,88 @@
-__pycache__/
-*.pyc
-
 # スキル実体は .github/skills/ に一元化。.claude/skills/ は環境ごとに張る
 # ジャンクション/シンボリックリンクのため追跡しない(追跡すると本体が二重にコミットされる)
 .claude/skills/
+
+# ローカル固有の設定・認可はマシンごとに異なるため共有しない
+.claude/settings.local.json
+
+
+# --- VBA / xlflow ---------------------------------------------------------
+# 真のソースは src/(UTF-8)。build/ 配下のブックは push で再生成されるため追跡しない
+build/
+# push 前の自動退避(--backup always)。ブック丸ごとのため巨大かつ再生成可能
+.xlflow/
+# xlflow セッション・一時展開の残骸
+.xlflow-session/
+# Excel の一時ロックファイル(ブックを開いている間だけ生成される)
+~$*.xls*
+# ブック本体は build/ 以外に置かない前提。誤って直下に出た場合の保険
+/*.xlsm
+/*.xlsb
+/*.xlam
+# fmt --line-numbers add で一時付与した行番号版などの退避
+*.bas.bak
+*.cls.bak
+*.frm.bak
+# .frm と対になるバイナリ(フォームは src/forms/specs/*.yaml が正)
+*.frx
+
+
+# --- C# / .NET ------------------------------------------------------------
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+artifacts/
+*.user
+*.suo
+.vs/
+# ビルド・テストの出力
+TestResults/
+*.trx
+*.coverage
+*.coverxml
+coverage*.json
+BenchmarkDotNet.Artifacts/
+# ローカル復元されるパッケージ実体(csproj の PackageReference が正)
+packages/
+project.lock.json
+
+
+# --- Python ---------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/dist/
+*.whl
+
+
+# --- ログ・診断出力 -------------------------------------------------------
+*.log
+logs/
+# scripts/*.py や xlflow --json の実行結果を手元に落とした一時ファイル
+tmp/
+.tmp/
+*.tmp
+
+
+# --- 監査・静的解析の生出力 -----------------------------------------------
+# 人が読む監査報告書 docs/audit/*.md は成果物なので追跡する。
+# ここで無視するのは audit_instructions.py 等が吐く機械可読な生出力のみ。
+docs/audit/*.json
+docs/audit/raw/
+audit-report.*
+lint-report.*
+
+
+# --- OS / エディタ --------------------------------------------------------
+Thumbs.db
+desktop.ini
+.DS_Store
+*.swp
