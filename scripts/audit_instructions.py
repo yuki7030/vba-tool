@@ -23,7 +23,7 @@ from pathlib import Path
 
 TARGETS = [
     "AGENTS.md",
-    "CLAUDE.md",
+    ".claude/CLAUDE.md",
     ".github/copilot-instructions.md",
     ".github/instructions/*.instructions.md",
     ".github/skills/*/SKILL.md",

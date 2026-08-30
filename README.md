@@ -52,7 +52,7 @@ xlflow save --json ; xlflow session stop
 
 ## ドキュメント
 
-- 共通開発指示(唯一のソース): [AGENTS.md](AGENTS.md)(Claude Code は [CLAUDE.md](CLAUDE.md) 経由で参照)
+- 共通開発指示(唯一のソース): [AGENTS.md](AGENTS.md)(Claude Code は [.claude/CLAUDE.md](.claude/CLAUDE.md) 経由で参照)
 - xlflow 導入ガイド(セットアップ・`xlflow.toml` 設定リファレンス): [docs/README-XLFLOW.md](docs/README-XLFLOW.md)
 - xlflow 概要・全コマンド一覧・中核機能の詳説: [docs/xlflow-overview.md](docs/xlflow-overview.md)
 - AI 設定ファイル導入手順: [docs/README-AI-SETUP.md](docs/README-AI-SETUP.md)

@@ -7,7 +7,7 @@
 | パス | 対象 | 役割 |
 |---|---|---|
 | AGENTS.md | 両方 | 共通指示の唯一のソース |
-| CLAUDE.md | Claude Code | AGENTS.md をインポートするだけの入口 |
+| .claude/CLAUDE.md | Claude Code | AGENTS.md をインポートするだけの入口 |
 | .github/copilot-instructions.md | Copilot | AGENTS.md への参照のみ |
 | .github/instructions/*.instructions.md | Copilot | 拡張子別の自動適用ルール |
 | .github/skills/*/SKILL.md | 両方 | 作業手順・規約本体(遅延ロードで低トークン) |
