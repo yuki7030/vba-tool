@@ -33,8 +33,8 @@ powershell -ExecutionPolicy Bypass -File scripts\link-skills.ps1
 `.claude/skills/` は環境ごとのリンクのため .gitignore 済み(追跡すると本体が二重に
 コミットされる)。**リンクを張らないとスキルは自動起動しない。**
 
-対象スキルは link-skills.ps1 の `$LINK_SKILLS`(現在: `grilling` / `grill-me` /
-`reverse-vba` / `xlflow`)。
+対象スキルは [scripts/link-skills.ps1](../scripts/link-skills.ps1) の
+`$LINK_SKILLS` を参照(一覧はここに書き写さない。追加のたびに陳腐化するため)。
 リンクを張るのは**description のトリガ語で自動起動させたいスキル**だけでよい。
 例外は `grill-me` で、`disable-model-invocation: true` により自動起動せず
 `/grill-me` の明示呼び出し専用のため、呼べるようにリンクは必要。

@@ -44,6 +44,15 @@ BUDGETS = [  # (ファイル名サフィックス, 最大行数)
     (".agent.md", 15),
     (".prompt.md", 15),
 ]
+# サフィックスが素の .md で固定できない .claude/agents・.claude/commands 用(パス部分一致)。
+# 対応する .github 側(.agent.md/.prompt.md)は上のBUDGETSで既に捕捉されるため、
+# ここは未捕捉分のみに効く。/agents/ は40行: 対応ペアを持たないClaude専用エージェント
+# (Explore/challenger/explorer/reviewer/scanner)が根拠説明込みで既存最大38行のため、
+# 既存分をERROR/WARN化させない値として設定(参照: docs/audit/ 監査記録)。
+PATH_BUDGETS = [
+    ("/agents/", 40),
+    ("/commands/", 15),
+]
 # セットアップ時に生成される等の理由で存在しなくてよい参照。配下(サブパス)も
 # 許可する(例: .claude/skills/xlflow はsetup.ps1が張るシンボリックリンク、
 # docs/as-is/* は reverse-vba スキルが対象リポジトリで生成する成果物)。
@@ -123,12 +132,21 @@ def main() -> int:
     for p in files:
         lines = p.read_text(encoding="utf-8", errors="replace").splitlines()
 
-        # 1) 行数予算
+        # 1) 行数予算(サフィックス一致 → 未一致ならパス部分一致にフォールバック)
+        matched_budget = False
         for suffix, budget in BUDGETS:
             if str(p).endswith(suffix):
+                matched_budget = True
                 if len(lines) > budget:
                     add("WARN", p, f"行数超過: {len(lines)}行(予算{budget}行)。分離・削除を検討")
                 break
+        if not matched_budget:
+            ps = str(p).replace("\\", "/")
+            for frag, budget in PATH_BUDGETS:
+                if frag in ps:
+                    if len(lines) > budget:
+                        add("WARN", p, f"行数超過: {len(lines)}行(予算{budget}行)。分離・削除を検討")
+                    break
 
         # 2) フロントマター必須キー
         req = required_keys(p)

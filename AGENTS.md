@@ -1,7 +1,6 @@
 # 共通開発指示(Claude Code / GitHub Copilot 共用)
 
 ## 技術スタック
-<!-- バージョンまで具体的に書くこと(効果:極高)。例: -->
 - VBA: Excel VBA 7.1 (Office 2019+ / 32bit)
 - C#: .NET 8 / C# 12 / Nullable有効
 
