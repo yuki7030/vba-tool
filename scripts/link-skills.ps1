@@ -1,7 +1,7 @@
 ﻿# =====================================================================
 # link-skills.ps1 — スキルをツール別ディレクトリへリンクする(冪等)
 # 実行: powershell -ExecutionPolicy Bypass -File scripts\link-skills.ps1
-#       [-Skills dig,xlflow]   # 対象を絞る場合(省略時は LINK_SKILLS 全件)
+#       [-Skills grilling,xlflow]   # 対象を絞る場合(省略時は LINK_SKILLS 全件)
 # =====================================================================
 # スキル実体は .github/skills/ に一元化し、各ツールのスキルディレクトリへは
 # リンクを張る(実体をコピーすると更新が二重管理になり、片方が腐るため)。
@@ -23,7 +23,7 @@ function Warn($msg) { Write-Host $msg -ForegroundColor Yellow }
 # リンクを張るのは description のトリガ語で自動起動させたいスキルのみ。
 # それ以外(vba-coding / code-review / agent-workflow 等)は AGENTS.md の
 # 「詳細規約」節がパスで参照しており、該当タスク時に読み込まれるため不要。
-$LINK_SKILLS = @("dig", "reverse-vba", "xlflow")
+$LINK_SKILLS = @("grilling", "grill-me", "reverse-vba", "xlflow")
 
 # リンク先ディレクトリ。.agents は xlflow init が作るため、存在する場合のみ張る。
 $LINK_ROOTS = @(
