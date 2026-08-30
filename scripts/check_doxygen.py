@@ -7,9 +7,9 @@
   --hook copilot : Copilot postToolUse。違反時 メッセージ出力 + exit 0 (CIが最終ゲート)
   --scan PATH... : CI/手動。指定パス以下を全検査。違反時 exit 1
 
-検査内容:
+検査内容(ヘッダコメントのみ。VBA の Option Explicit は lint_vba.py の E4 が担当):
   C#  (.cs)            : public/protected/internal のクラス・メソッド等に /// ヘッダ必須
-  VBA (.bas/.cls/.frm) : Public Sub/Function/Property に '* ヘッダ必須、Option Explicit 必須
+  VBA (.bas/.cls/.frm) : Public Sub/Function/Property に '* ヘッダ必須
 """
 import json
 import re
@@ -58,8 +58,6 @@ def check_file(path: Path):
             if not _prev_has_doc(lines, i, "///"):
                 issues.append((i + 1, "Doxygenヘッダ(/// @brief 等)がありません"))
     elif ext in VBA_EXT:
-        if not re.search(r"^\s*Option\s+Explicit", text, re.IGNORECASE | re.MULTILINE):
-            issues.append((1, "Option Explicit がありません"))
         for i, line in enumerate(lines):
             m = VBA_DECL.match(line)
             # DoxyVB6は '* をメンバーコメント、'! をモジュールコメントとして扱う

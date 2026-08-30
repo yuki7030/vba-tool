@@ -12,6 +12,7 @@ vba-coding スキルの規約を機械的に検査する。使い方は check_do
   E1: On Error Resume Next の放置(同一プロシージャ内で On Error GoTo により復帰しない)
   E2: 秘密情報らしき文字列のハードコード(password / pwd / secret / apikey / token)
   E3: 型宣言のない Dim(暗黙 Variant)
+  E4: モジュール先頭の Option Explicit 欠落(E3 と同じ「暗黙の変数宣言」を防ぐ規約のため本検査に置く)
   W1: .Select / .Activate / Selection への依存(遅く壊れやすい)
   W2: ScreenUpdating / EnableEvents を False にしたまま True に戻す行がない
 """
@@ -24,6 +25,7 @@ VBA_EXT = {".bas", ".cls", ".frm"}
 
 PROC_START = re.compile(r"^\s*(?:Public\s+|Private\s+|Friend\s+)?(?:Static\s+)?(Sub|Function|Property)\s+\w+", re.I)
 PROC_END = re.compile(r"^\s*End\s+(Sub|Function|Property)\b", re.I)
+OPTION_EXPLICIT = re.compile(r"^\s*Option\s+Explicit", re.I | re.M)
 RESUME_NEXT = re.compile(r"^\s*On\s+Error\s+Resume\s+Next\b", re.I)
 ON_ERROR_GOTO = re.compile(r"^\s*On\s+Error\s+GoTo\b", re.I)
 SECRET = re.compile(r'(?:\b(?:password|passwd|pwd|secret|apikey|api_key|token)\s*=\s*"[^"]+"'
@@ -74,6 +76,9 @@ def check_file(path: Path):
     lines = text.splitlines()
     issues = []
     resume_line = None  # 未復帰の On Error Resume Next の行番号
+
+    if not OPTION_EXPLICIT.search(text):
+        issues.append((1, "E4: Option Explicit がありません(タイプミスが暗黙 Variant になる)"))
 
     for i, raw in enumerate(lines):
         code = strip_comment(raw)

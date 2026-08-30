@@ -112,12 +112,13 @@ Copilot の .agent.md にも `# model:` 行を用意済み(コメントアウト
 | 層 | 設定ファイル | 動作 |
 |---|---|---|
 | Claude Code | .claude/settings.json | 編集直後に検査。違反はAIへ差し戻し自動修正させる(exit 2) |
-| Copilot (CLI/coding agent/VS Code) | .github/hooks/doxygen.json | 編集直後に検査結果を通知 |
+| Copilot (CLI/coding agent/VS Code) | .github/hooks/static-analysis.json | 編集直後に検査結果を通知 |
 | CI (最終ゲート) | .github/workflows/static-analysis.yml | PR/push時に全ファイル検査。人間のコミットも対象 |
 
 検査本体は3本(要 Python 3.8+)。全層で共用:
-- scripts/check_doxygen.py: C#=public類に `///` ヘッダ必須 / VBA=Public プロシージャに `'*` ヘッダ+Option Explicit 必須
-- scripts/lint_vba.py: エラー握りつぶし(On Error Resume Next 放置)・秘密情報ハードコード・暗黙Variant・Select/Activate依存・ScreenUpdating未復帰を検出
+- scripts/check_doxygen.py: ヘッダコメントのみ。C#=public類に `///` 必須 / VBA=Public プロシージャに `'*` 必須
+- scripts/lint_vba.py: エラー握りつぶし(On Error Resume Next 放置)・秘密情報ハードコード・暗黙Variant・
+  Option Explicit 欠落・Select/Activate依存・ScreenUpdating未復帰を検出
 - scripts/check_spec_sync.py: 承認済み SPEC の「正本への反映内容」が対象 FEAT へ転記済みか、
   features/README.md の索引が FEAT と一致するかを検査(CI で fail させる)
 - 手動実行: `python scripts/check_doxygen.py --scan .` / `python scripts/lint_vba.py --scan .` /
