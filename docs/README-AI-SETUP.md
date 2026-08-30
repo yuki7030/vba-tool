@@ -95,7 +95,7 @@ Copilot の .agent.md にも `# model:` 行を用意済み(コメントアウト
 | CI (最終ゲート) | .github/workflows/doxygen-check.yml | PR/push時に全ファイル検査。人間のコミットも対象 |
 
 検査本体は2本(要 Python 3.8+)。全層で共用:
-- scripts/check_doxygen.py: C#=public類に `///` ヘッダ必須 / VBA=Public プロシージャに `'!` ヘッダ+Option Explicit 必須
+- scripts/check_doxygen.py: C#=public類に `///` ヘッダ必須 / VBA=Public プロシージャに `'*` ヘッダ+Option Explicit 必須
 - scripts/lint_vba.py: エラー握りつぶし(On Error Resume Next 放置)・秘密情報ハードコード・暗黙Variant・Select/Activate依存・ScreenUpdating未復帰を検出
 - 手動実行: `python scripts/check_doxygen.py --scan .` / `python scripts/lint_vba.py --scan .`
 - Windows で python3 コマンドが無い場合は設定内の python3 を python に読み替え(Claude Code側はフォールバック記述済み)

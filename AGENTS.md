@@ -21,7 +21,7 @@
 
 ## 出力・コメント
 - 回答・コメント・ドキュメントは日本語、識別子は英語。回答は要点のみ簡潔に。
-- 全公開関数に Doxygen ヘッダ必須(C#: `///`+@brief等 / VBA: `'!`+@brief等)。
+- 全公開関数に Doxygen ヘッダ必須(C#: `///`+@brief等 / VBA: `'*`+@brief等)。
 - 処理コメントは「なぜ」を書く(自明な「何を」コメントは禁止)。
 - コミット: プレフィックス英語(feat:/fix:/docs:/chore:)+本文日本語。
 
@@ -30,6 +30,7 @@
 - 仕様書作成: .github/skills/spec-writing/
 - 既存VBA資産のリバース(as-is起こし): .github/skills/reverse-vba/
 - VBA実装: .github/skills/vba-coding/
+- VBAのDoxygenコメント・APIリファレンス生成: .github/skills/doxyvb6/
 - C#実装: .github/skills/csharp-coding/
 - レビュー: .github/skills/code-review/
 - バグ診断: .github/skills/diagnosing-bugs/ / 指示ファイル執筆: .github/skills/writing-for-agents/

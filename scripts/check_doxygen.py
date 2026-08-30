@@ -9,7 +9,7 @@
 
 検査内容:
   C#  (.cs)            : public/protected/internal のクラス・メソッド等に /// ヘッダ必須
-  VBA (.bas/.cls/.frm) : Public Sub/Function/Property に '! ヘッダ必須、Option Explicit 必須
+  VBA (.bas/.cls/.frm) : Public Sub/Function/Property に '* ヘッダ必須、Option Explicit 必須
 """
 import json
 import re
@@ -62,8 +62,9 @@ def check_file(path: Path):
             issues.append((1, "Option Explicit がありません"))
         for i, line in enumerate(lines):
             m = VBA_DECL.match(line)
-            if m and not _prev_has_doc(lines, i, "'!"):
-                issues.append((i + 1, f"{m.group(2)}: Doxygenヘッダ('! @brief 等)がありません"))
+            # DoxyVB6は '* をメンバーコメント、'! をモジュールコメントとして扱う
+            if m and not _prev_has_doc(lines, i, "'*"):
+                issues.append((i + 1, f"{m.group(2)}: Doxygenヘッダ('* @brief 等)がありません"))
     return issues
 
 

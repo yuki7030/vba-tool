@@ -12,15 +12,17 @@ description: VBA(Excel/Access マクロ、.bas/.cls/.frm)のコード新規作�
 - エラー処理: 公開プロシージャには `On Error GoTo ErrHandler` を実装し、後始末(Close/Set Nothing)を保証。
 - 画面更新抑止等(ScreenUpdating/Calculation)は必ず元に戻す。
 
-## Doxygenヘッダコメント(必須・`'!` 形式)
-※ Doxygen は VBA 非対応のためフィルタ(例: vbfilter)併用を前提に `'!` を使用。
+## Doxygenヘッダコメント(必須・`'*` 形式)
+※ Doxygen は VBA 非対応のため DoxyVB6 フィルタ併用が前提。メンバーは `'*`、
+モジュール冒頭は `'!`。マーカーの使い分け・生成手順は
+`.github/skills/doxyvb6/SKILL.md` を参照。
 
 ```vb
-'! @brief   売上データを集計しシートへ出力する
-'! @param   wsSrc  入力元ワークシート
-'! @param   dtFrom 集計開始日
-'! @return  出力した行数。異常時は -1
-'! @details 日付範囲外の行は無視する
+'* @brief   売上データを集計しシートへ出力する
+'* @param   wsSrc  入力元ワークシート
+'* @param   dtFrom 集計開始日
+'* @return  出力した行数。異常時は -1
+'* @details 日付範囲外の行は無視する
 Public Function AggregateSales(ByVal wsSrc As Worksheet, ByVal dtFrom As Date) As Long
     On Error GoTo ErrHandler
     ' 集計対象範囲を最終行から動的に決定(固定範囲だと行追加に追随できないため)
