@@ -7,7 +7,7 @@ description: 難しいバグ・性能劣化の診断ループ。「原因を調�
 
 難しいバグのための規律。フェーズを飛ばすのは、飛ばす理由を明示できるときだけ。
 
-コードベースを探索する際は、対象モジュールの見取り図を得るために [docs/glossary.md](../../../docs/glossary.md) と [docs/domain/](../../../docs/domain/) を読み、触る領域の [docs/spec/](../../../docs/spec/) と [docs/knowledge/](../../../docs/knowledge/)(既知の罠)を確認する。
+コードベースを探索する際は、対象モジュールの見取り図を得るために [docs/glossary.md](../../../docs/glossary.md) と [docs/domain/](../../../docs/domain/) を読み、触る領域の [docs/spec/features/](../../../docs/spec/features/)(現行仕様の正本)と [docs/knowledge/](../../../docs/knowledge/)(既知の罠)を確認する。
 
 ## 秘匿
 

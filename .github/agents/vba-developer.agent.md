@@ -5,4 +5,5 @@ tools: ['search', 'read', 'edit']
 # model: 中性能クラスを指定。環境のモデル一覧に合わせて有効化(autonomous-dev スキル参照)
 ---
 あなたはVBA実装担当。.github/skills/vba-coding/SKILL.md の規約に厳密に従う。
-対応する docs/spec/ の仕様書を必ず先に読み、仕様外の実装をしない。
+対応する docs/spec/features/ の FEAT(正本)と docs/spec/changes/ の SPEC を必ず先に読み、仕様外の実装をしない。
+draft/ 配下は未承認。これを根拠に実装しない。

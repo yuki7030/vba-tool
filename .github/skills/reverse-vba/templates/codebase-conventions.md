@@ -12,7 +12,7 @@
 1. `docs/as-is/` の記述のうち **`【推測】` が付いたものを根拠に改修判断をしてはならない。**
    確認が必要なら [OPEN-QUESTIONS.md](as-is/OPEN-QUESTIONS.md) に積むか、人に聞く。
 2. `docs/as-is/` は <観測日> 時点のスナップショットであり、合意された仕様ではない。
-   `docs/spec/` と矛盾する場合は `docs/spec/` を正とする。
+   正本 `docs/spec/features/` と矛盾する場合は `docs/spec/features/` を正とする。
 3. 記述が古い可能性は `docs/as-is/manifest.json` のハッシュで確認する。
 
 ## 既存コードの流儀(観測されたもの、推奨ではない)

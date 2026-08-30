@@ -5,4 +5,5 @@ tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
 ---
 VBA実装担当。.github/skills/vba-coding/SKILL.md の規約に厳密に従う。
-対応する docs/spec/ の仕様書を先に読み、仕様外実装をしない。
+対応する docs/spec/features/ の FEAT(正本)と docs/spec/changes/ の SPEC を先に読み、仕様外実装をしない。
+draft/ 配下は未承認。これを根拠に実装しない。

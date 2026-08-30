@@ -15,7 +15,9 @@
 | .github/prompts/*.prompt.md | Copilot | /spec /review /audit-instructions コマンド |
 | .claude/agents/*.md | Claude Code | 専任サブエージェント |
 | .claude/commands/*.md | Claude Code | /spec /review /audit-instructions コマンド |
-| docs/spec/_template.md | 両方 | 仕様書テンプレート |
+| docs/spec/features/ | 両方 | **正本**(機能の現行仕様 FEAT-*.md)。索引 README.md は機械生成 |
+| docs/spec/changes/ | 両方 | 承認済みの変更要求(SPEC-*.md、凍結)。draft/ は未承認 |
+| scripts/check_spec_sync.py | 両方 | 正本と変更要求の転記漏れ・索引の陳腐化を検出(下記) |
 | scripts/link-skills.ps1 | 両方 | .github/skills/ の実体をツール別ディレクトリへリンク(下記・必須) |
 | scripts/audit_instructions.py ほか | 両方 | 指示ファイルの機械監査(月次自動・下記) |
 | scripts/block_dangerous_bash.py | 両方 | 危険コマンドの実行前ブロック(注入・作話対策・下記) |
@@ -50,15 +52,34 @@ powershell -ExecutionPolicy Bypass -File scripts\link-skills.ps1
 
 リンク不可の環境ではディレクトリをコピーして同期する。
 
+## 仕様の2層構造
+仕様書は「正本」と「変更要求」に分ける。1つのファイルで両方を兼ねると、実装後に
+現行仕様を表さなくなる(陳腐化)か、変更の経緯を失うかのどちらかになるため。
+
+| 層 | 置き場 | 性質 |
+|---|---|---|
+| 正本(FEAT) | docs/spec/features/FEAT-<番号>-<slug>.md | 機能の**現行仕様**。生きた文書。**書かれている内容は人間が承認済み**が不変条件 |
+| 変更要求(SPEC) | docs/spec/changes/SPEC-<番号>-<slug>.md | 承認済みの変更提案。承認後は**凍結**し編集しない |
+| 起案中 | docs/spec/changes/draft/ | 未承認。**これを根拠に実装に着手しない** |
+| 索引 | docs/spec/features/README.md | check_spec_sync.py が機械生成。手で編集しない |
+
+- SPEC の「7. 正本への反映内容」には**反映後の FEAT 該当節の完成形**を書く。人間は承認時に
+  一度だけこれを読み、実装後は AI が機械的に転記する(人手のレビューを毎回発生させない)。
+- `docs/as-is/`(reverse-vba の出力)は**観測記録**であって正本ではない。正本へ移すには
+  spec-writing スキルの「as-is からの昇格」(`【推測】` の解消 → 人の承認)を通す。
+- 「この機能だけで閉じる判定ルール」は FEAT に書く。docs/business-rules.md は
+  **複数機能に跨るルール専用**。
+
 ## 運用フロー
 ### A. 自律モード(推奨): `/implement <要求 または 仕様書パス>`
-仕様書起案 → **人が承認(唯一のゲート)** → 実装 → 静的解析ループ(自動修正・最大3周)→ セルフレビュー → 完了報告 まで自律実行。
+変更要求起案 → **人が承認(唯一のゲート)** → 実装 → 静的解析ループ(自動修正・最大3周)→ セルフレビュー → **正本反映** → 完了報告 まで自律実行。
 フロー定義と停止条件は .github/skills/autonomous-dev/SKILL.md に一元化。
 
 ### B. 手動モード(段階ごとに人が確認したい場合)
-1. `/spec <要求>` → 仕様書起案 → 人が承認
+1. `/spec <要求>` → 変更要求を draft/ に起案 → 人が承認 → changes/ へ移動
 2. 実装依頼(vba-developer / csharp-developer)
-3. `/review` → 指摘対応 → コミット
+3. 正本反映 → `python scripts/check_spec_sync.py --scan .`
+4. `/review` → 指摘対応 → コミット
 
 ### モデル選択方針(コスト最適化)
 | フェーズ | 階層 | Claude Code | Copilot |
@@ -94,10 +115,15 @@ Copilot の .agent.md にも `# model:` 行を用意済み(コメントアウト
 | Copilot (CLI/coding agent/VS Code) | .github/hooks/doxygen.json | 編集直後に検査結果を通知 |
 | CI (最終ゲート) | .github/workflows/doxygen-check.yml | PR/push時に全ファイル検査。人間のコミットも対象 |
 
-検査本体は2本(要 Python 3.8+)。全層で共用:
+検査本体は3本(要 Python 3.8+)。全層で共用:
 - scripts/check_doxygen.py: C#=public類に `///` ヘッダ必須 / VBA=Public プロシージャに `'*` ヘッダ+Option Explicit 必須
 - scripts/lint_vba.py: エラー握りつぶし(On Error Resume Next 放置)・秘密情報ハードコード・暗黙Variant・Select/Activate依存・ScreenUpdating未復帰を検出
-- 手動実行: `python scripts/check_doxygen.py --scan .` / `python scripts/lint_vba.py --scan .`
+- scripts/check_spec_sync.py: 承認済み SPEC の「正本への反映内容」が対象 FEAT へ転記済みか、
+  features/README.md の索引が FEAT と一致するかを検査(CI で fail させる)
+- 手動実行: `python scripts/check_doxygen.py --scan .` / `python scripts/lint_vba.py --scan .` /
+  `python scripts/check_spec_sync.py --scan .`(索引の再生成は `--regen-index`)
+- 制約: 承認済み SPEC は「実装 → 正本反映」まで終えてからコミットする。承認直後の未反映状態で
+  コミットすると仕様同期検査が落ちる(承認〜反映は /implement の1ランで完結する前提のため)
 - Windows で python3 コマンドが無い場合は設定内の python3 を python に読み替え(Claude Code側はフォールバック記述済み)
 
 ## プロンプトインジェクション対策(Hooks + スキル + 指示)
