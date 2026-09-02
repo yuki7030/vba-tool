@@ -91,6 +91,20 @@ powershell -ExecutionPolicy Bypass -File scripts\link-skills.ps1
 Claude Code は .claude/agents/*.md の `model:` フロントマターで自動適用。
 Copilot の .agent.md にも `# model:` 行を用意済み(コメントアウト)。環境のモデル一覧の正式名称に書き換えて有効化する(名称不一致だとエージェントが読み込めない環境があるため既定は無効)。
 
+### 設定時の注意: `opusplan` を選ばない
+`opusplan` は plan mode 中を Opus、実行中を Sonnet に解決する設定。モデルは
+プロンプトキャッシュのキーの一部のため、**plan mode をトグルするたびに
+キャッシュが全破棄される**。AGENTS.md は「調査→計画提示→承認→実装」を必ず
+通すため、この設定とは相性が悪い。`/model` では単一のモデルを選ぶ。
+
+本リポジトリは `.claude/settings.json` に `model` を固定しない。テンプレートとして
+配布するため、環境によって利用できないモデル(Pro プランの Opus 等)を clone 先に
+強制しないことを優先する。個人の環境で固定したい場合は Claude Code が個人用に
+用意している `.claude/settings.local.json` に置く(リポジトリに含めない)。
+
+実測にもとづく診断と対処判断は `.github/skills/cost-audit/`。
+`/cost-audit` で明示的に呼び出す(自動起動しない)。
+
 ## トークン節約の仕組み
 - 常駐するのは AGENTS.md(短文)とスキルの説明文のみ。
 - 規約本体(SKILL.md)は関連タスク時のみロード。
