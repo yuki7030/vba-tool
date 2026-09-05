@@ -1,0 +1,43 @@
+# xlflow プロジェクト設定。値の判断観点は docs/README-XLFLOW.md
+# 「xlflow.toml 設定リファレンス」を参照。
+# 緩和設定は最終手段。まず src/ 側を規約に合わせること。
+
+[project]
+name = "vba-tool"
+entry = "Main.Run"
+
+[excel]
+path = "build/vba-tool.xlsm"
+# 自動化を無人で回すため既定は非表示・アラート抑制。
+# 目視デバッグ時のみ visible を一時的に true にする。
+visible = false
+display_alerts = false
+bridge = "auto"
+
+[src]
+modules = "src/modules"
+classes = "src/classes"
+forms = "src/forms"
+workbook = "src/workbook"
+
+[vba]
+# 機能ごとのフォルダ分割を @Folder 注釈と対応させる。
+folders = true
+# ソースのディレクトリ構成を正とし、push のたびに注釈を追従させる。
+folder_annotation = "update"
+default_component_folders = true
+
+[userform]
+code_source = "frm"
+
+[fmt]
+operator_spacing = true
+declaration_spacing = true
+
+[lint]
+# ルール無効化は「エラーの握りつぶし禁止」に抵触しうるため、
+# 追加する場合は理由をコメントで残すこと。
+disabled_rules = []
+
+[analyze]
+disabled_rules = []
