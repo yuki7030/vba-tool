@@ -30,3 +30,8 @@
   「例外が出ない=成功」ではない(未登録AUMIDは無例外で無表示)。
   トーストは `CREATE_NO_WINDOW`(対話セッション)で起動する。
   `DETACHED_PROCESS` は生存が必要な監視プロセス専用。
+
+## 2026-09-05 受け入れ基準の機械検査を導入(計測の境界)
+
+- scripts/check_acceptance.py 導入。以降のセッションログには AC 検証コマンドの
+  実行が含まれる。③(harness_report.py)で before/after を出す際はこの日を境界とする。

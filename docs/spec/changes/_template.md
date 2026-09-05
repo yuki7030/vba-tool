@@ -28,7 +28,20 @@
 <!-- 変更対象モジュール・関数 -->
 
 ## 6. 受け入れ基準
-<!-- どうなったら完了か。検証可能な形で -->
+
+<!-- scripts/check_acceptance.py が検査する節。書式を崩さない。
+     判定は「自動」「人手」のいずれか。空欄・その他は ERROR。
+     自動: 検証欄に allowlist 内のコマンドを書く。実行はエージェントが
+           Bash ツール経由で行う(検査スクリプトはコマンドを実行しない)。
+           許可: xlflow test / xlflow lint / dotnet test / python scripts/ /
+                 bash docs/spec/changes/ac/
+     人手: 検証欄に bash docs/spec/changes/ac/SPEC-nnn-ACn.sh を書く。
+           作り方は docs/spec/changes/ac/README.md。
+     検証手段が思いつかない AC は、要求が曖昧である兆候。AC ではなく要求を直す。 -->
+
+| AC | 内容 | 検証 | 判定 |
+|---|---|---|---|
+| AC-1 | <満たされた状態。曖昧語禁止> | `<コマンド または ac/ 配下のスクリプト>` | 自動 |
 
 ## 7. 正本への反映内容
 

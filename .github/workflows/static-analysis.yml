@@ -16,7 +16,11 @@ jobs:
         run: python scripts/lint_vba.py --scan .
       - name: 仕様同期検査(正本と変更要求の転記漏れ・索引の陳腐化)
         run: python scripts/check_spec_sync.py --scan .
+      - name: 受け入れ基準の検査
+        run: python scripts/check_acceptance.py --scan .
       - name: 仕様同期検査のセルフテスト
         run: python scripts/check_spec_sync.py --self-test
+      - name: 受け入れ基準検査のセルフテスト
+        run: python scripts/check_acceptance.py --self-test
       - name: 危険コマンド検査フックのセルフテスト
         run: python scripts/block_dangerous_bash.py --self-test
