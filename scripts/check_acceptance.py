@@ -94,6 +94,11 @@ AC_PATH_RE = re.compile(r"(docs/spec/changes/ac/[^\s`\"']+)")
 
 VAGUE_WORDS = ("適切に", "柔軟に", "必要に応じて", "正しく")
 
+# 節の同定は「番号を除いた見出し名の完全一致」で行う。部分一致にすると
+# `# SPEC-012: 受け入れ基準の見直し` のような H1 を §6 として拾い、
+# 直下のメタ表を AC 表と誤認して偽陽性を出す(導入時に実測)。
+SECTION_HEADING_RE = re.compile(r"^(?:\d+(?:\.\d+)*\.?\s*)?%s$" % re.escape(SECTION))
+
 
 class Finding:
     """1件の指摘。fail-loud のため ID を必ず持たせる。"""
@@ -122,6 +127,11 @@ def section_start(lines: list[str], match) -> int | None:
         if m and match(m.group(2)):
             return i
     return None
+
+
+def is_ac_heading(title: str) -> bool:
+    """見出し名が「受け入れ基準」節か。先頭の節番号(`6.` 等)の有無は問わない。"""
+    return SECTION_HEADING_RE.match(title.strip()) is not None
 
 
 def split_row(line: str) -> list[str] | None:
@@ -220,8 +230,8 @@ def check_spec(path: Path, root: Path, since: int) -> list[Finding]:
     out: list[Finding] = []
     lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
 
-    start = section_start(lines, lambda t: SECTION in t)
-    body = section_body(lines, lambda t: SECTION in t)
+    start = section_start(lines, is_ac_heading)
+    body = section_body(lines, is_ac_heading)
     if start is None or body is None:
         return [E(1, "E1", "「%s」節がありません" % SECTION)]
 
@@ -355,6 +365,9 @@ def _spec(body: str, num: str = "900") -> str:
 
 _TABLE_HEAD = "## 6. 受け入れ基準\n\n| AC | 内容 | 検証 | 判定 |\n|---|---|---|---|\n"
 
+_TITLE_WITH_SECTION = "# SPEC-921: 受け入れ基準の見直し\n\n"
+_META_TABLE = "| 項目 | 内容 |\n|---|---|\n| 対象FEAT | FEAT-000 |\n\n"
+
 
 def _self_test() -> int:
     cases: list[tuple[str, str, str, str]] = [
@@ -403,6 +416,13 @@ def _self_test() -> int:
          _spec("## 6. 受け入れ基準\n\n<!--\n| AC-9 | 例 | `curl http://x` | 自動 |\n-->\n\n| AC | 内容 | 検証 | 判定 |\n|---|---|---|---|\n| AC-1 | 空文字で ERR を返す | `dotnet test` | 自動 |\n"), ""),
         ("W2 人手過半数", "SPEC-915-a.md",
          _spec(_TABLE_HEAD + "| AC-1 | 帳票が崩れない | `bash docs/spec/changes/ac/ok.sh` | 人手 |\n"), "W2"),
+        # 節の同定が部分一致だと、この H1 が §6 として拾われ冒頭のメタ表を
+        # AC 表と誤認する(2列なので E1 が3件出る)。偽陽性の回帰テスト。
+        ("題名に節名を含む SPEC を誤認しない", "SPEC-921-a.md",
+         _TITLE_WITH_SECTION + _META_TABLE + _TABLE_HEAD
+         + "| AC-1 | 空文字で ERR を返す | `dotnet test` | 自動 |\n", ""),
+        ("題名に節名を含んでも §6 の不在を検出する", "SPEC-922-a.md",
+         _TITLE_WITH_SECTION + _META_TABLE + "## 7. 正本への反映内容\n本文\n", "E1"),
     ]
 
     failed = 0
