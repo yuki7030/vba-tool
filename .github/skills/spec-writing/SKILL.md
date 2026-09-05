@@ -32,7 +32,10 @@ description: ユーザ要求の調査・検討と仕様書(Markdown)の作成・
 6. 「7. 正本への反映内容」に**反映後の FEAT 該当節の完成形**を書く。
    書式は `### FEAT-<番号> § <FEAT側の節見出し>` + 本文。差分・方針で書かない
    (実装後は機械転記するだけにし、AI の解釈が入る余地を残さないため)。
-7. ユーザに承認を求める。**承認前に実装を始めない。**
+7. 「6. 受け入れ基準」を `_template.md` の書式で書く。各 AC に検証手段と
+   判定(自動/人手)を必ず入れる。検査:
+   `python scripts/check_acceptance.py --scan docs/spec/changes/draft/SPEC-<番号>-<slug>.md`
+8. ユーザに承認を求める。**承認前に実装を始めない。**
    承認されたら `git mv` で `draft/` から `docs/spec/changes/` へ移す。
    以降の実装〜正本反映は autonomous-dev スキルのフローに従う。
 
@@ -56,6 +59,9 @@ description: ユーザ要求の調査・検討と仕様書(Markdown)の作成・
 ## 記述ルール
 
 - 曖昧語(「適切に」「柔軟に」)禁止。入出力・境界値・異常系を具体化。
+- 受け入れ基準は**検証手段とセット**で書く。手段が思いつかない AC は、要求そのものが
+  曖昧である兆候。AC を消すのではなく要求へ戻る。自動化できない AC は「人手」として
+  残してよい(隠すより未検証と明示する方が安全)。
 - FEAT には**現行仕様のみ**を書く。目的・背景・未決事項・改訂履歴は書かない
   (それらは SPEC 側にあり、二重管理すると片方が必ず古くなる)。
   変更の経緯はメタ表の `関連SPEC` から辿る。
@@ -70,4 +76,5 @@ FEAT・SPEC・索引の整合は機械検査で担保する(人手の確認に�
 ```
 python scripts/check_spec_sync.py --scan .
 python scripts/check_spec_sync.py --scan . --regen-index
+python scripts/check_acceptance.py --scan .
 ```
